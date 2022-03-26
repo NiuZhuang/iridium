@@ -1,15 +1,25 @@
 #[derive(Debug, PartialEq)]
 pub enum Opcode {
-    /// Halt the program
+    /// LOAD $0 #500
+    LOAD,
+    /// ADD $0 $1 $2
+    ADD,
+    SUB,
+    MUL,
+    DIV,
     HLT,
-    /// Illegal opcode
     IGL,
 }
 
 impl From<u8> for Opcode {
     fn from(v: u8) -> Self {
         match v {
-            0 => Opcode::HLT,
+            0 => Opcode::LOAD,
+            1 => Opcode::ADD,
+            2 => Opcode::SUB,
+            3 => Opcode::MUL,
+            4 => Opcode::DIV,
+            5 => Opcode::HLT,
             _ => Opcode::IGL,
         }
     }
