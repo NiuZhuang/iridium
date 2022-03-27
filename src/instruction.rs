@@ -1,14 +1,15 @@
 #[derive(Debug, PartialEq)]
 pub enum Opcode {
-    /// LOAD $0 #500
     LOAD,
-    /// ADD $0 $1 $2
     ADD,
     SUB,
     MUL,
     DIV,
-    HLT,
-    IGL,
+    HLT,  // Halt
+    JMP,  // Jump
+    JMPB, // Jump backwards
+    JMPF, // Jump forwards
+    IGL,  // Illegal
 }
 
 impl From<u8> for Opcode {
@@ -20,6 +21,9 @@ impl From<u8> for Opcode {
             3 => Opcode::MUL,
             4 => Opcode::DIV,
             5 => Opcode::HLT,
+            6 => Opcode::JMP,
+            7 => Opcode::JMPB,
+            8 => Opcode::JMPF,
             _ => Opcode::IGL,
         }
     }

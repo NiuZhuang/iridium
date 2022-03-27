@@ -67,6 +67,18 @@ impl VM {
 
                 self.remainder = (register1 % register2) as u32;
             }
+            Opcode::JMP => {
+                let target = self.registers[self.next_8_bits() as usize];
+                self.pc = (target) as usize;
+            }
+            Opcode::JMPF => {
+                let value = self.registers[self.next_8_bits() as usize] as usize;
+                self.pc += value;
+            }
+            Opcode::JMPB => {
+                let value = self.registers[self.next_8_bits() as usize] as usize;
+                self.pc += value;
+            }
             Opcode::HLT => {
                 println!("HLT encountered");
                 return false;
@@ -145,5 +157,25 @@ mod tests {
 
         test_vm.run();
         assert_eq!(test_vm.registers[0], 500);
+    }
+
+    #[test]
+    fn test_jmp_opcode() {
+        let mut test_vm = VM::new();
+        test_vm.registers[0] = 3; // JMP target
+        test_vm.program = vec![6, 0, 0, 0];
+        test_vm.run_once();
+
+        assert_eq!(test_vm.pc, 3);
+    }
+
+    #[test]
+    fn test_jmpf_opcode() {
+        let mut test_vm = VM::new();
+        test_vm.registers[0] = 2; // JMPF value, foward 2
+        test_vm.program = vec![8, 0, 0, 0, 6, 0, 0, 0];
+        test_vm.run_once();
+
+        assert_eq!(test_vm.pc, 4);
     }
 }
