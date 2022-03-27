@@ -57,7 +57,7 @@ impl REPL {
                     }
                 }
                 _ => {
-                    println!("Ivalid input")
+                    println!("Invalid input")
                 }
             }
         }
