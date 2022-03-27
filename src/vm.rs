@@ -107,7 +107,6 @@ impl VM {
             Opcode::GTE => {
                 let register1 = self.registers[self.next_8_bits() as usize];
                 let register2 = self.registers[self.next_8_bits() as usize];
-                println!("!!!GTE: {} >= {} \n", &register1, &register2);
                 self.equal_flag = register1 >= register2;
 
                 self.next_8_bits();
