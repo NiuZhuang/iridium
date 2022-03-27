@@ -15,5 +15,5 @@ Horizontal scalability
 3. [Part 03 - More Basic Opcodes](https://blog.subnetzero.io/post/building-language-vm-part-03/)
 4. [Part 04 - Jumps](https://blog.subnetzero.io/post/building-language-vm-part-04/)
 5. [Part 05 - Equality Checks](https://blog.subnetzero.io/post/building-language-vm-part-05/)
-
+6. [Part 06 - The REPL](https://blog.subnetzero.io/post/building-language-vm-part-06/)
 
