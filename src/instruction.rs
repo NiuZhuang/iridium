@@ -2,41 +2,69 @@
 #[derive(Debug, PartialEq)]
 pub enum Opcode {
     /// LOAD $0 $1 $2
-    /// 
+    ///
     /// Combines the second and third operand fields into a u16 which is then loaded into the register.
-    LOAD,
+    LOAD = 0,
     /// ADD $0 $1 $2
-    /// 
+    ///
     /// Adds the contents of registers specified in operand 1 and 2 and places the result in register 3.
-    ADD,
+    ADD = 1,
     /// SUB $0 $1 $2
-    /// 
+    ///
     /// Subtracts register 2 from register 1 and places the result in register 3
-    SUB,
+    SUB = 2,
     /// MUL $0 $1 $2
-    /// 
+    ///
     /// Multiplies the contents of registers specified in operand 1 and 2 and places the result in register 3.
-    MUL,
-    /// DIV $0 $1 $2 
-    /// 
+    MUL = 3,
+    /// DIV $0 $1 $2
+    ///
     /// Divides the contents of registers in operand 1 and 2; results go in register 3. The remainder goes in the remainder field of the VM.
-    DIV,
+    DIV = 4,
     /// Halts execution of the program.
-    HLT,
-    /// JMP $0 
-    /// 
+    HLT = 5,
+    /// JMP $0
+    ///
     /// Jumps directly to the address in the specified in the register.
-    JMP,
-    /// JMPB $0 
-    /// 
+    JMP = 6,
+    /// JMPB $0
+    ///
     /// Relative jump backward by the number in the register.
-    JMPB, 
-    /// JMPB $0 
-    /// 
+    JMPB = 7,
+    /// JMPB $0
+    ///
     /// Relative jump forward by the number in the register.
-    JMPF,
-    /// Used if an illegal opcode got in to the bytecode. 
-    IGL, 
+    JMPF = 8,
+    /// EQ $0 $1
+    ///
+    /// Checks the values in registers 1 and 2 and sets the VM equal flag to true if they are, false if not
+    EQ = 9,
+    /// NEQ $0 $1
+    ///
+    /// Checks the values in registers 1 and 2 and sets the VM equal flag to false if they are, true if not
+    NEQ = 10,
+    /// GTE $0 $1
+    ///
+    /// Checks if register 1 is >= register 2
+    GTE = 11,
+    /// LET $0 $1
+    ///
+    /// Checks if register 1 is <= register 2
+    LTE = 12,
+    /// LT $0 $1
+    ///
+    /// Checks if register 1 is < register 2
+    LT = 13,
+    /// GT $0 $1
+    ///
+    /// Checks if register 1 is > register 2
+    GT = 14,
+    /// JMPE $0 $1 $2
+    ///
+    /// Direct jump to the value in the register if the VM’s equal_flag is true
+    JMPE = 15,
+    /// Used if an illegal opcode got in to the bytecode.
+    IGL = 100,
 }
 
 impl From<u8> for Opcode {
@@ -51,6 +79,13 @@ impl From<u8> for Opcode {
             6 => Opcode::JMP,
             7 => Opcode::JMPB,
             8 => Opcode::JMPF,
+            9 => Opcode::EQ,
+            10 => Opcode::NEQ,
+            11 => Opcode::GTE,
+            12 => Opcode::LTE,
+            13 => Opcode::LT,
+            14 => Opcode::GT,
+            15 => Opcode::JMPE,
             _ => Opcode::IGL,
         }
     }
