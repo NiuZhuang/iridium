@@ -1,5 +1,5 @@
 /// Opcodes for the [instruction set](https://gitlab.com/subnetzero/iridium/blob/master/docs/manual.adoc).
-#[derive(Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Opcode {
     /// LOAD $0 $1 $2
     ///
