@@ -1,9 +1,6 @@
 use crate::assembler::instruction_parsers::{instruction, AssemblerInstruction};
 
-use nom::{
-    multi::many1,
-    IResult,
-};
+use nom::{multi::many1, IResult};
 
 #[derive(Debug, PartialEq)]
 pub struct Program {

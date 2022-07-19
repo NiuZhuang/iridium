@@ -4,10 +4,10 @@ use crate::assembler::register_parsers::register;
 use crate::assembler::Token;
 
 use nom::{
+    branch::alt,
     character::complete::{multispace1, space1},
     combinator::opt,
     sequence::tuple,
-    branch::alt,
     IResult,
 };
 #[derive(Debug, PartialEq)]
@@ -37,7 +37,7 @@ fn instruction_one(input: &str) -> IResult<&str, AssemblerInstruction> {
 }
 
 fn instruction_two(input: &str) -> IResult<&str, AssemblerInstruction> {
-    let (input, (o, opts)) = tuple((opcode, opt(multispace1)))(input)?;
+    let (input, (o, _)) = tuple((opcode, opt(multispace1)))(input)?;
 
     Ok((
         input,
@@ -66,7 +66,7 @@ impl AssemblerInstruction {
             }
         };
 
-        for operand in vec![&self.operand1, &self.operand2, &self.operand3] {
+        for operand in &[&self.operand1, &self.operand2, &self.operand3] {
             match operand {
                 Some(t) => AssemblerInstruction::extract_operand(t, &mut results),
                 None => {}

@@ -2,7 +2,6 @@ use crate::vm::VM;
 use std;
 use std::io;
 use std::io::Write;
-use std::num::ParseIntError;
 
 use crate::assembler::program_parsers::program;
 

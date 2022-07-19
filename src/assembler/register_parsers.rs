@@ -1,10 +1,5 @@
 use crate::assembler::Token;
-use nom::{
-    bytes::complete::{tag},
-    character::complete::digit1,
-    combinator::map_res,
-    IResult,
-};
+use nom::{bytes::complete::tag, character::complete::digit1, combinator::map_res, IResult};
 
 pub fn register(input: &str) -> IResult<&str, Token> {
     let (input, _) = tag("$")(input)?;
@@ -25,5 +20,4 @@ mod tests {
         let result = register("$a");
         assert!(result.is_err());
     }
-
 }

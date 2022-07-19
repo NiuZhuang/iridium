@@ -63,10 +63,14 @@ pub enum Opcode {
     ///
     /// Direct jump to the value in the register if the VM’s equal_flag is true
     JMPE = 15,
-    /// Unused
+    /// NOP
     ///
     /// Does nothing; is a no-op.
     NOP = 16,
+    /// ALOC $1
+    ///
+    /// Increases the heap by the amount specified in the first register
+    ALOC = 17,
     /// Used if an illegal opcode got in to the bytecode.
     IGL = 100,
 }
@@ -91,6 +95,7 @@ impl From<u8> for Opcode {
             14 => Opcode::GT,
             15 => Opcode::JMPE,
             16 => Opcode::NOP,
+            17 => Opcode::ALOC,
             _ => Opcode::IGL,
         }
     }
@@ -116,6 +121,7 @@ impl From<&str> for Opcode {
             "lt" => Opcode::LT,
             "jmpe" => Opcode::JMPE,
             "nop" => Opcode::NOP,
+            "aloc" => Opcode::ALOC,
             _ => Opcode::IGL,
         }
     }
