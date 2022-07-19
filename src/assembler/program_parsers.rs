@@ -1,4 +1,4 @@
-use crate::assembler::instruction_parsers::{instruction_one, AssemblerInstruction};
+use crate::assembler::instruction_parsers::{instruction, AssemblerInstruction};
 
 use nom::{
     multi::many1,
@@ -11,7 +11,7 @@ pub struct Program {
 }
 
 pub fn program(input: &str) -> IResult<&str, Program> {
-    let (input, instructions) = many1(instruction_one)(input)?;
+    let (input, instructions) = many1(instruction)(input)?;
 
     Ok((input, Program { instructions }))
 }
