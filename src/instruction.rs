@@ -63,6 +63,10 @@ pub enum Opcode {
     ///
     /// Direct jump to the value in the register if the VM’s equal_flag is true
     JMPE = 15,
+    /// Unused
+    ///
+    /// Does nothing; is a no-op.
+    NOP = 16,
     /// Used if an illegal opcode got in to the bytecode.
     IGL = 100,
 }
@@ -86,6 +90,32 @@ impl From<u8> for Opcode {
             13 => Opcode::LT,
             14 => Opcode::GT,
             15 => Opcode::JMPE,
+            16 => Opcode::NOP,
+            _ => Opcode::IGL,
+        }
+    }
+}
+
+impl From<&str> for Opcode {
+    fn from(v: &str) -> Self {
+        match v {
+            "load" => Opcode::LOAD,
+            "add" => Opcode::ADD,
+            "sub" => Opcode::SUB,
+            "mul" => Opcode::MUL,
+            "div" => Opcode::DIV,
+            "hlt" => Opcode::HLT,
+            "jmp" => Opcode::JMP,
+            "jmpf" => Opcode::JMPF,
+            "jmpb" => Opcode::JMPB,
+            "eq" => Opcode::EQ,
+            "neq" => Opcode::NEQ,
+            "gte" => Opcode::GTE,
+            "gt" => Opcode::GT,
+            "lte" => Opcode::LTE,
+            "lt" => Opcode::LT,
+            "jmpe" => Opcode::JMPE,
+            "nop" => Opcode::NOP,
             _ => Opcode::IGL,
         }
     }
@@ -116,5 +146,13 @@ mod tests {
     fn test_create_instruction() {
         let instruction = Instruction::new(Opcode::HLT);
         assert_eq!(instruction.opcode, Opcode::HLT);
+    }
+
+    #[test]
+    fn test_str_to_opcode() {
+        let opcode = Opcode::from("load");
+        assert_eq!(opcode, Opcode::LOAD);
+        let opcode = Opcode::from("illegal");
+        assert_eq!(opcode, Opcode::IGL);
     }
 }

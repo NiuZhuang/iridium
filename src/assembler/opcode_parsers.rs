@@ -1,26 +1,31 @@
 use crate::assembler::Token;
 use crate::instruction::Opcode;
-use nom::{bytes::complete::tag_no_case, IResult};
+use nom::{character::complete::alpha1, IResult};
 
-pub fn opcode_load(input: &str) -> IResult<&str, Token> {
-    let (input, _) = tag_no_case("load")(input)?;
+pub fn opcode(input: &str) -> IResult<&str, Token> {
+    let (input, opcode) = alpha1(input)?;
 
-    Ok((input, (Token::Op { code: Opcode::LOAD })))
+    Ok((
+        input,
+        (Token::Op {
+            code: Opcode::from(opcode),
+        }),
+    ))
 }
 
 mod tests {
     use super::*;
 
     #[test]
-    fn test_opcode_load() {
-        let result = opcode_load("Load");
-        assert!(result.is_ok());
-
+    fn test_opcode() {
+        let result = opcode("load");
+        assert_eq!(result.is_ok(), true);
         let (rest, token) = result.unwrap();
         assert_eq!(token, Token::Op { code: Opcode::LOAD });
         assert_eq!(rest, "");
-
-        let result = opcode_load("aold");
-        assert!(result.is_err());
+        let result = opcode("aold");
+        let (_, token) = result.unwrap();
+        assert_eq!(token, Token::Op { code: Opcode::IGL });
+    
     }
 }

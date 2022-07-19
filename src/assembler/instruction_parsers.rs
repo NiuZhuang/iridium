@@ -3,8 +3,13 @@ use crate::assembler::operand_parsers::integer_operand;
 use crate::assembler::register_parsers::register;
 use crate::assembler::Token;
 
-use nom::{character::complete::space1, sequence::tuple, IResult};
-
+use nom::{
+    character::complete::{multispace1, space1},
+    combinator::opt,
+    sequence::tuple,
+    branch::alt,
+    IResult,
+};
 #[derive(Debug, PartialEq)]
 pub struct AssemblerInstruction {
     opcode: Token,
@@ -13,16 +18,33 @@ pub struct AssemblerInstruction {
     operand3: Option<Token>,
 }
 
-pub fn instruction_one(input: &str) -> IResult<&str, AssemblerInstruction> {
-    let (input, (o, _, r, _, i)) =
-        tuple((opcode_load, space1, register, space1, integer_operand))(input)?;
+pub fn instruction(input: &str) -> IResult<&str, AssemblerInstruction> {
+    alt((instruction_one, instruction_two))(input)
+}
 
+fn instruction_one(input: &str) -> IResult<&str, AssemblerInstruction> {
+    let (input, (o, _, r, _, i)) =
+        tuple((opcode, space1, register, space1, integer_operand))(input)?;
     Ok((
         input,
         AssemblerInstruction {
             opcode: o,
             operand1: Some(r),
             operand2: Some(i),
+            operand3: None,
+        },
+    ))
+}
+
+fn instruction_two(input: &str) -> IResult<&str, AssemblerInstruction> {
+    let (input, (o, opts)) = tuple((opcode, opt(multispace1)))(input)?;
+
+    Ok((
+        input,
+        AssemblerInstruction {
+            opcode: o,
+            operand1: None,
+            operand2: None,
             operand3: None,
         },
     ))
@@ -90,6 +112,23 @@ mod tests {
                     opcode: Token::Op { code: Opcode::LOAD },
                     operand1: Some(Token::Register { reg_num: 0 }),
                     operand2: Some(Token::IntegerOperand { value: 100 }),
+                    operand3: None
+                }
+            ))
+        );
+    }
+
+    #[test]
+    fn test_parse_instruction_form_two() {
+        let result = instruction_two("hlt");
+        assert_eq!(
+            result,
+            Ok((
+                "",
+                AssemblerInstruction {
+                    opcode: Token::Op { code: Opcode::HLT },
+                    operand1: None,
+                    operand2: None,
                     operand3: None
                 }
             ))

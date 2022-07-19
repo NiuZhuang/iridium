@@ -21,9 +21,9 @@ mod tests {
         let result = register("$0");
         assert!(result.is_ok());
         let result = register("0");
-        assert!(result.is_ok());
+        assert!(result.is_err());
         let result = register("$a");
-        assert!(result.is_ok());
+        assert!(result.is_err());
     }
 
 }

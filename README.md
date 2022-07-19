@@ -19,3 +19,4 @@ Horizontal scalability
 7. [Part 07 - REPL and Code Execution](https://blog.subnetzero.io/post/building-language-vm-part-07/)
 8. [Part 08 - Assembler: The Beginning](https://blog.subnetzero.io/post/building-language-vm-part-08/)
 9. [Part 09 - Assembler 2: Cruise Control](https://blog.subnetzero.io/post/building-language-vm-part-09/)
+10. [Part 09 - Assembler 3: Assemble Harder](https://blog.subnetzero.io/post/building-language-vm-part-10/)
