@@ -7,6 +7,10 @@ pub struct VM {
     pc: usize,
     /// The bytecode of the program being run
     pub program: Vec<u8>,
+
+    /// Used for heap memory
+    heap: Vec<u8>,
+
     /// Contains the remainder of modulo division ops
     remainder: u32,
     /// Contains the result of the last comparison operation
@@ -19,6 +23,7 @@ impl VM {
             registers: [0; 32],
             program: vec![],
             pc: 0,
+            heap: vec![],
             remainder: 0,
             equal_flag: false,
         }
@@ -145,7 +150,18 @@ impl VM {
             Opcode::HLT => {
                 println!("HLT encountered");
                 return false;
-            }
+            },
+            Opcode::NOP => {
+                self.next_8_bits();
+                self.next_8_bits();
+                self.next_8_bits();
+            },
+            Opcode::ALOC => {
+                let register = self.next_8_bits() as usize;
+                let bytes = self.registers[register];
+                let new_end = self.heap.len() as i32 + bytes;
+                self.heap.resize(new_end as usize, 0)
+            },
             _ => {
                 println!("Unrecognized opcode found! Terminating!");
                 return false;
@@ -249,11 +265,11 @@ mod tests {
 
         test_vm.program = vec![Opcode::EQ as u8, 0, 1, 0, Opcode::EQ as u8, 0, 1, 0];
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, true);
+        assert!(test_vm.equal_flag);
 
         test_vm.registers[1] = 20;
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, false);
+        assert!(!test_vm.equal_flag);
     }
 
     #[test]
@@ -263,11 +279,11 @@ mod tests {
         test_vm.registers[1] = 20;
         test_vm.program = vec![Opcode::NEQ as u8, 0, 1, 0, Opcode::NEQ as u8, 0, 1, 0];
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, true);
+        assert!(test_vm.equal_flag);
 
         test_vm.registers[1] = 10;
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, false);
+        assert!(!test_vm.equal_flag);
     }
 
     #[test]
@@ -291,15 +307,15 @@ mod tests {
         ];
 
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, true);
+        assert!(test_vm.equal_flag);
 
         test_vm.registers[0] = 10;
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, true);
+        assert!(test_vm.equal_flag);
 
         test_vm.registers[0] = 5;
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, false);
+        assert!(!test_vm.equal_flag);
     }
 
     #[test]
@@ -322,13 +338,13 @@ mod tests {
             0,
         ];
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, false);
+        assert!(!test_vm.equal_flag);
         test_vm.registers[0] = 10;
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, true);
+        assert!(test_vm.equal_flag);
         test_vm.registers[0] = 5;
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, true);
+        assert!(test_vm.equal_flag);
     }
 
     #[test]
@@ -351,13 +367,13 @@ mod tests {
             0,
         ];
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, false);
+        assert!(!test_vm.equal_flag);
         test_vm.registers[0] = 10;
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, false);
+        assert!(!test_vm.equal_flag);
         test_vm.registers[0] = 5;
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, true);
+        assert!(test_vm.equal_flag);
     }
 
     #[test]
@@ -380,13 +396,13 @@ mod tests {
             0,
         ];
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, true);
+        assert!(test_vm.equal_flag);
         test_vm.registers[0] = 10;
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, false);
+        assert!(!test_vm.equal_flag);
         test_vm.registers[0] = 5;
         test_vm.run_once();
-        assert_eq!(test_vm.equal_flag, false);
+        assert!(!test_vm.equal_flag);
     }
 
     #[test]
@@ -410,5 +426,14 @@ mod tests {
         ];
         test_vm.run_once();
         assert_eq!(test_vm.pc, 7);
+    }
+
+    #[test]
+    fn test_aloc_opcode(){
+        let mut test_vm = VM::get_test_vm();
+        test_vm.registers[0] = 1024;
+        test_vm.program = vec![17, 0, 0, 0];
+        test_vm.run_once();
+        assert_eq!(test_vm.heap.len(), 1024);
     }
 }
