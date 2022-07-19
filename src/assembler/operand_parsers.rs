@@ -1,11 +1,5 @@
-
 use crate::assembler::Token;
-use nom::{
-    bytes::complete::{tag},
-    character::complete::digit1,
-    combinator::map_res,
-    IResult,
-};
+use nom::{bytes::complete::tag, character::complete::digit1, combinator::map_res, IResult};
 
 pub fn integer_operand(input: &str) -> IResult<&str, Token> {
     let (input, _) = tag("#")(input)?;
@@ -13,7 +7,6 @@ pub fn integer_operand(input: &str) -> IResult<&str, Token> {
 
     Ok((input, Token::IntegerOperand { value: reg_num }))
 }
-
 
 mod tests {
     use super::*;

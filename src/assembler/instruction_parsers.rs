@@ -4,10 +4,10 @@ use crate::assembler::register_parsers::register;
 use crate::assembler::Token;
 
 use nom::{
+    branch::alt,
     character::complete::{multispace1, space1},
     combinator::opt,
     sequence::tuple,
-    branch::alt,
     IResult,
 };
 #[derive(Debug, PartialEq)]

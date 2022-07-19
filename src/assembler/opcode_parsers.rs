@@ -19,13 +19,12 @@ mod tests {
     #[test]
     fn test_opcode() {
         let result = opcode("load");
-        assert_eq!(result.is_ok(), true);
+        assert!(result.is_ok());
         let (rest, token) = result.unwrap();
         assert_eq!(token, Token::Op { code: Opcode::LOAD });
         assert_eq!(rest, "");
         let result = opcode("aold");
         let (_, token) = result.unwrap();
         assert_eq!(token, Token::Op { code: Opcode::IGL });
-    
     }
 }
